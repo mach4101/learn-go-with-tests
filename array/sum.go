@@ -2,8 +2,8 @@ package main
 
 func Sum(numbers [5]int) int {
 	res := 0
-	for i := 0; i < 5; i++ {
-		res += numbers[i]
+	for _, number := range numbers {
+		res += number
 	}
 
 	return res
