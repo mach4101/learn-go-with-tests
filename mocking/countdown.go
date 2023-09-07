@@ -7,24 +7,36 @@ import (
 	"time"
 )
 
-type SpySleeper struct {
-	Calls int
-}
+const sleep = "sleep"
+const write = "write"
 
+// configuration of sleep
 type ConfigurableSleeper struct {
 	duration time.Duration
 }
 
+// record table
+type CountdownOperationSpy struct {
+	Calls []string
+}
+
+// interface
 type Sleeper interface {
 	Sleep()
 }
 
-func (o *ConfigurableSleeper) Sleep() {
-	time.Sleep(o.duration)
+func (c *ConfigurableSleeper) Sleep() {
+	time.Sleep(c.duration)
 }
 
-func (s *SpySleeper) Sleep() {
-	s.Calls++
+// implement Sleep interface
+func (s *CountdownOperationSpy) Sleep() {
+	s.Calls = append(s.Calls, sleep)
+}
+
+func (s *CountdownOperationSpy) Write(p []byte) (n int, err error) {
+	s.Calls = append(s.Calls, write)
+	return
 }
 
 func Countdown(out io.Writer, sleeper Sleeper) {
