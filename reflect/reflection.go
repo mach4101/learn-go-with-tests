@@ -1,6 +1,8 @@
 package reflection
 
-import "reflect"
+import (
+	"reflect"
+)
 
 type Person struct {
 	Name    string
@@ -13,17 +15,24 @@ type Profile struct {
 }
 
 func walk(x interface{}, fn func(input string)) {
-	val := reflect.ValueOf(x)
-
+	val := getValue(x)
 	for i := 0; i < val.NumField(); i++ {
 		field := val.Field(i)
 
-		if field.Kind() == reflect.String {
+		switch field.Kind() {
+		case reflect.String:
 			fn(field.String())
-		}
-
-		if field.Kind() == reflect.Struct {
+		case reflect.Struct:
 			walk(field.Interface(), fn)
 		}
 	}
+}
+
+func getValue(x interface{}) reflect.Value {
+	val := reflect.ValueOf(x)
+
+	if val.Kind() == reflect.Ptr {
+		return val.Elem()
+	}
+	return val
 }
