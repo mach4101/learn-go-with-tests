@@ -27,6 +27,22 @@ func TestWalk(t *testing.T) {
 				"China",
 			},
 			[]string{"mach", "China"},
+		}, {
+			"Struct with non string field",
+			struct {
+				Name string
+				Age  int
+			}{
+				"mach", 22,
+			},
+			[]string{"mach"},
+		}, {
+			"Nested fields",
+			Person{
+				"mach",
+				Profile{22, "GuangDong"},
+			},
+			[]string{"mach", "GuangDong"},
 		},
 	}
 
